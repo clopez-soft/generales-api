@@ -11,16 +11,11 @@ import config from "./config";
 const allowlist = [
   "http://localhost:3000",
   "http://localhost:5050",
-  "http://localhost:5050/graphql",
-  "http://192.168.68.53:3000",
-  "http://127.0.0.1:3000/",
-  "http:/localhost:4173/",
   "http://localhost:8080",
-  "http://localhost:8080/graphql",
-  "http://127.0.0.1:4173/",
-  "https://general-conteo-yoro-a5j9g.ondigitalocean.app/",
-  "https://general-app-yoro-zj32k.ondigitalocean.app/",
-  "https://general-app-yoro-zj32k.ondigitalocean.app/graphql",
+  "http://127.0.0.1:3000",
+  "http://127.0.0.1:4173",
+  "https://general-conteo-yoro-a5j9g.ondigitalocean.app",
+  "https://general-app-yoro-zj32k.ondigitalocean.app",
 ];
 
 async function bootstrap() {
@@ -51,15 +46,19 @@ async function bootstrap() {
   // });
   app.enableCors({
     origin: (origin, callback) => {
-      if (!origin) return callback(null, true);
+      console.log("Origin =>", origin); // <-- déjalo por ahora
 
-      const index = allowlist.indexOf(origin);
-      if (index !== -1) {
+      if (!origin) {
+        return callback(null, true); // permite Postman / CURL
+      }
+
+      if (allowlist.includes(origin)) {
         callback(null, true);
       } else {
-        callback(new Error("Not allowed by CORS"));
+        callback(new Error("CORS: Origin not allowed => " + origin));
       }
     },
+    credentials: true,
   });
   app.enableShutdownHooks(); // Cierra conexiones correctamente
 

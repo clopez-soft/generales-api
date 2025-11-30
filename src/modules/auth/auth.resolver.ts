@@ -37,7 +37,6 @@ export class AuthResolver {
   login(
     @Args("loginUserInput") input: LoginUserInput
   ): Promise<LoginStatusDto> {
-    console.info("entro?");
     return this.authService.login(input);
   }
 
